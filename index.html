@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>ImgPremios</title>
+  <link rel="icon" href="data:;base64,=">
+</head>
+<body>
+  <h1>ImgPremios</h1>
+  <ul id="lista-imagenes"></ul>
+
+  <script>
+    // Configura estos valores con tu usuario y repositorio de GitHub
+    const usuarioGitHub = "MercadeoDev";
+    const repositorioGitHub = "ImgPremios";
+    const rutaCarpeta = "imagenes";  
+
+    // Obtener lista de imágenes desde la API de GitHub
+    fetch(`https://api.github.com/repos/${usuarioGitHub}/${repositorioGitHub}/contents/${rutaCarpeta}`)
+      .then(response => response.json())
+      .then(archivos => {
+        const lista = document.getElementById('lista-imagenes');
+        
+        archivos
+          .filter(archivo => 
+            archivo.type === 'file' && 
+            archivo.name.toLowerCase().endsWith('.png')
+          )
+          .forEach(archivo => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = archivo.download_url;  // URL directa al archivo
+            a.textContent = archivo.name;
+            a.target = '_blank';
+            li.appendChild(a);
+            lista.appendChild(li);
+          });
+      })
+      .catch(error => console.error('Error:', error));
+  </script>
+</body>
+</html>
